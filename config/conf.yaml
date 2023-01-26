@@ -1,0 +1,16 @@
+mysql:
+  Host : 127.0.0.1
+  Port: 3306
+  User: root
+  PassWord: xtc
+  DataBase: test_gorm
+  CharSet: utf8mb4
+  ParseTime: True
+  Loc: Local
+
+
+redis:
+  IP:       8.134.108.219
+  Port:     6379
+  PassWord: XTCqq+582
+  DataBase: 0
