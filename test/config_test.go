@@ -1,7 +1,7 @@
 package test
 
 import (
-	dbUtil "qingxunyin/bytedance-tiktok/config"
+	"qingxunyin/bytedance-tiktok/util/dbUtil"
 	"testing"
 )
 

@@ -3,52 +3,21 @@ package dbUtil
 import (
 	"fmt"
 	"github.com/go-redis/redis"
-	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"os"
+	"qingxunyin/bytedance-tiktok/config"
 )
 
-type mysqlConfig struct {
-	Host      string `yaml:"Host"`
-	Port      string `yaml:"Port"`
-	User      string `yaml:"User"`
-	PassWord  string `yaml:"PassWord"`
-	DataBase  string `yaml:"DataBase"`
-	CharSet   string `yaml:"CharSet"`
-	ParseTime string `yaml:"ParseTime"`
-	Loc       string `yaml:"Loc"`
-}
-
-type redisConfig struct {
-	IP       string `yaml:"IP"`
-	Port     int    `yaml:"Port"`
-	PassWord string `yaml:"PassWord"`
-	DataBase int    `yaml:"DataBase"`
-}
-
-type config struct {
-	Mysql mysqlConfig `yaml:"mysql"`
-	Redis redisConfig `yaml:"redis"`
-}
-
-var db *gorm.DB
-
-var rdb *redis.Client
+var (
+	// 数据库操作连接
+	db *gorm.DB
+	// redis操作连接
+	rdb *redis.Client
+)
 
 func init() {
-	dataBytes, err := os.ReadFile("config/conf.yaml")
-	if err != nil {
-		fmt.Println("读取文件失败：", err)
-		return
-	}
-	config := config{}
-	err = yaml.Unmarshal(dataBytes, &config)
-	if err != nil {
-		fmt.Println("解析 yaml 文件失败：", err)
-		return
-	}
 
+	config := config.GetConf()
 	//配置数据库连接信息
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%v&loc=%s",
 		config.Mysql.User, config.Mysql.PassWord, config.Mysql.Host, config.Mysql.Port,
@@ -56,6 +25,7 @@ func init() {
 		config.Mysql.Loc)
 
 	//连接数据库
+	var err error
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		PrepareStmt:            true, //缓存预编译命令
 		SkipDefaultTransaction: true, //禁用默认事务操作
