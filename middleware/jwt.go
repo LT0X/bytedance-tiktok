@@ -57,8 +57,8 @@ func ParseToken(tokenString string) (*MyClaims, bool) {
 	}
 	return nil, false
 }
-
-// JWTMiddleWare 鉴权中间件，鉴权并设置token信息到
+C
+// JWTMiddleWare 鉴权中间件，鉴权并设置token信息到Context
 func JWTMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenStr := c.Query("token")
