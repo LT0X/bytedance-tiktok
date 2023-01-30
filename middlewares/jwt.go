@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"github.com/dgrijalva/jwt-go"
@@ -19,10 +19,10 @@ type MyClaims struct {
 var key = []byte("dingxiangzhandui")
 
 // GetToken 生成token的方法
-func GetToken(uid int64) (string, error) {
+func GetToken(loginUser models.UserLogin) (string, error) {
 
 	c := &MyClaims{
-		Uid: uid, //自定义字段
+		Uid: loginUser.Id, //自定义字段
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),                          //发布时间
 			ExpiresAt: time.Now().Add(time.Hour * 10 * 24).Unix(), //过期时间

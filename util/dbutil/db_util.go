@@ -1,19 +1,13 @@
-package dbUtil
+package dbutil
 
 import (
 	"fmt"
-	"github.com/go-redis/redis"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"qingxunyin/bytedance-tiktok/config"
 )
 
-var (
-	// 数据库操作连接
-	db *gorm.DB
-	// redis操作连接
-	rdb *redis.Client
-)
+var db *gorm.DB
 
 func init() {
 
@@ -46,17 +40,6 @@ func init() {
 	//连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
 	sqlDB.SetMaxIdleConns(20)
 
-	//初始化redis配置
-	rdb = redis.NewClient(
-		&redis.Options{
-			Addr:     fmt.Sprintf("%s:%d", config.Redis.IP, config.Redis.Port),
-			Password: config.Redis.PassWord,
-			DB:       config.Redis.DataBase,
-		})
-	_, err = rdb.Ping().Result()
-	if err != nil {
-		fmt.Println("redis连接失败", err)
-	}
 }
 
 // GetDB 单例模式获取DB对象
@@ -66,11 +49,4 @@ func init() {
 // 注意：使用连接池技术后，千万不要使用完db后调用db.Close关闭数据库连接，
 func GetDB() *gorm.DB {
 	return db
-}
-
-// GetRDB 单例返回rdb对象
-// 使用后无需调用close,连接池会自动回收
-// close是关闭连接池对象
-func GetRDB() *redis.Client {
-	return rdb
 }

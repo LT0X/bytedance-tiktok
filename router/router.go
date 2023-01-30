@@ -2,16 +2,17 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"qingxunyin/bytedance-tiktok/config"
 )
 
-func initRouter(r *gin.Engine) {
+func InitRouter(r *gin.Engine) {
 
 	//静态资源路径
-	r.Static("", "")
+	r.Static("/static", config.GetConf().Path.StaticPath)
 
 	apiRouter := r.Group("/douyin")
 
-	// basic apis
+	// 基础接口
 	apiRouter.GET("/feed/")
 	apiRouter.GET("/user/")
 	apiRouter.POST("/user/register/")
@@ -19,13 +20,13 @@ func initRouter(r *gin.Engine) {
 	apiRouter.POST("/publish/action/")
 	apiRouter.GET("/publish/list/")
 
-	// extra apis - I
+	// 互动接口
 	apiRouter.POST("/favorite/action/")
 	apiRouter.GET("/favorite/list/")
 	apiRouter.POST("/comment/action/")
 	apiRouter.GET("/comment/list/")
 
-	// extra apis - II
+	//社交接口
 	apiRouter.POST("/relation/action/")
 	apiRouter.GET("/relation/follow/list/")
 	apiRouter.GET("/relation/follower/list/")

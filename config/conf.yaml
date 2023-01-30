@@ -21,7 +21,6 @@ redis:
 server:
   IP:  127.0.0.1
   Port: 8080
-
 #资源路径
 path:
-  StaticPath:
+  StaticPath: ./static

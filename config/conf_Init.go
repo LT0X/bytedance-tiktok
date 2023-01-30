@@ -40,13 +40,13 @@ type config struct {
 	Path   pathConfig   `yaml:"path"`
 }
 
-//项目配置文件对象
+// 项目配置文件对象
 var conf *config
 
-//在导包的时候自动加载init函数读取配置文件初始化conf对象
+// 在导包的时候自动加载init函数读取配置文件初始化conf对象
 func init() {
 
-	dataBytes, err := os.ReadFile("config/conf.yaml")
+	dataBytes, err := os.ReadFile("config/conf.yaml") //获取不到可以写绝对路径
 	if err != nil {
 		fmt.Println("读取文件失败：", err)
 		return
@@ -59,7 +59,7 @@ func init() {
 
 }
 
-//单例模式获取配置文件对象
+// GetConf 单例模式获取配置文件对象
 func GetConf() *config {
 	return conf
 }
