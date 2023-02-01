@@ -46,7 +46,7 @@ var conf *config
 // 在导包的时候自动加载init函数读取配置文件初始化conf对象
 func init() {
 
-	dataBytes, err := os.ReadFile("config/conf.yaml") //获取不到可以写绝对路径
+	dataBytes, err := os.ReadFile("D:\\GoProject\\src\\qingxunyin\\bytedance-tiktok\\config\\conf.yaml") //获取不到可以写绝对路径
 	if err != nil {
 		fmt.Println("读取文件失败：", err)
 		return

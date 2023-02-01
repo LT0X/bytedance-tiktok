@@ -1,12 +1,20 @@
 package test
 
 import (
-	"qingxunyin/bytedance-tiktok/util/dbutil"
+	"qingxunyin/bytedance-tiktok/models"
 	"testing"
 )
 
 func TestAdd(t *testing.T) {
-	dbutil.GetDB()
+
+	xx := models.UserLogin{
+		Id:         12,
+		UserInfoId: 1,
+		Username:   "xx",
+		Password:   "sdsd",
+	}
+
+	models.GetUserLoginDao().AddUserLogin(&xx)
 }
 
 func Pxx() {
