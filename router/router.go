@@ -3,6 +3,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"qingxunyin/bytedance-tiktok/config"
+	"qingxunyin/bytedance-tiktok/controllers/user_login"
+	"qingxunyin/bytedance-tiktok/middlewares"
 )
 
 func InitRouter(r *gin.Engine) {
@@ -15,8 +17,8 @@ func InitRouter(r *gin.Engine) {
 	// 基础接口
 	apiRouter.GET("/feed/")
 	apiRouter.GET("/user/")
-	apiRouter.POST("/user/register/")
-	apiRouter.POST("/user/login/")
+	apiRouter.POST("/user/register/", middlewares.EncryptMiddleWare(), user_login.UserRegisterHandler)
+	apiRouter.POST("/user/login/", middlewares.EncryptMiddleWare(), user_login.UserLoginHandler)
 	apiRouter.POST("/publish/action/")
 	apiRouter.GET("/publish/list/")
 

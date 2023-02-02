@@ -9,7 +9,7 @@ import (
 )
 
 // EncryptPassword 将密码加密，需要传入密码返回的是加密后的密码
-func EncryptPassword(password string) (string, error) {
+func encryptPassword(password string) (string, error) {
 	// 加密密码，使用 bcrypt 包当中的 GenerateFromPassword 方法，bcrypt.DefaultCost 代表使用默认加密成本
 	encryptPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -36,15 +36,15 @@ func EncryptMiddleWare() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if !IsChinese(password) {
+		if IsChinese(password) {
 			c.JSON(http.StatusOK, models.ResponseStatus{
-				StatusCode: 1,
+				StatusCode: -1,
 				StatusMsg:  "密码包含中文",
 			})
 			c.Abort()
 			return
 		}
-		password, err := EncryptPassword(password)
+		password, err := encryptPassword(password)
 		if err != nil {
 			c.JSON(http.StatusOK, models.ResponseStatus{
 				StatusCode: 1,

@@ -7,16 +7,16 @@ import (
 	"qingxunyin/bytedance-tiktok/services/login_service"
 )
 
-type UserLoginResponse struct {
+type UserRegisterResponse struct {
 	models.ResponseStatus
-	*login_service.LoginResponse
+	*login_service.RegisterResponse
 }
 
-func UserLoginHandler(c *gin.Context) {
+func UserRegisterHandler(c *gin.Context) {
 
-	response := new(UserLoginResponse)
+	response := new(UserRegisterResponse)
 	var err error
-	//解析参数
+
 	username := c.Query("username")
 	temp, _ := c.Get("password")
 	password, ok := temp.(string)
@@ -29,9 +29,8 @@ func UserLoginHandler(c *gin.Context) {
 		})
 		return
 	}
-	//返回对应的错误
-	response.LoginResponse, err = login_service.
-		NewUserLoginService(username, password).Do()
+	response.RegisterResponse, err = login_service.
+		NewRegisterService(username, password).Do()
 	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			ResponseStatus: models.ResponseStatus{
@@ -41,7 +40,6 @@ func UserLoginHandler(c *gin.Context) {
 		})
 		return
 	}
-
-	response.ResponseStatus.StatusCode = 0
+	response.StatusCode = 0
 	c.JSON(http.StatusOK, response)
 }

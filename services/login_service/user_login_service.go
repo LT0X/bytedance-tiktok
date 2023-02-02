@@ -1,16 +1,20 @@
-package user_login
+package login_service
 
 import (
 	"errors"
-	"qingxunyin/bytedance-tiktok/controllers/user_login"
 	"qingxunyin/bytedance-tiktok/middlewares"
 	"qingxunyin/bytedance-tiktok/models"
 )
 
+type LoginResponse struct {
+	UserId int64  `json:"user_id"`
+	Token  string `json:"token"`
+}
+
 type UserLoginService struct {
 	username string
 	password string
-	*user_login.UserLoginResponse
+	*LoginResponse
 }
 
 func NewUserLoginService(username string, password string) *UserLoginService {
@@ -21,7 +25,7 @@ func NewUserLoginService(username string, password string) *UserLoginService {
 
 }
 
-func (u *UserLoginService) Do() (*user_login.UserLoginResponse, error) {
+func (u *UserLoginService) Do() (*LoginResponse, error) {
 
 	//检查姓名格式
 	err := u.checkUserName()
@@ -30,16 +34,18 @@ func (u *UserLoginService) Do() (*user_login.UserLoginResponse, error) {
 	}
 	//检查用户是否存在
 	userLogin, err := models.GetUserLoginDao().QueryUserLogin(u.username, u.password)
-	if err == nil {
+	if err != nil {
 		return nil, err
 	}
+
 	//颁发token和设置信息
+	u.LoginResponse = new(LoginResponse)
 	u.Token, err = middlewares.GetToken(*userLogin)
 	u.UserId = userLogin.Id
 	if err != nil {
 		return nil, err
 	}
-	return u.UserLoginResponse, nil
+	return u.LoginResponse, nil
 
 }
 
