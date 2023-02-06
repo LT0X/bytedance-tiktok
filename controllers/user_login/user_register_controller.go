@@ -16,7 +16,7 @@ func UserRegisterHandler(c *gin.Context) {
 
 	response := new(UserRegisterResponse)
 	var err error
-
+	//解析参数
 	username := c.Query("username")
 	temp, _ := c.Get("password")
 	password, ok := temp.(string)
@@ -29,6 +29,7 @@ func UserRegisterHandler(c *gin.Context) {
 		})
 		return
 	}
+	//进行业务逻辑
 	response.RegisterResponse, err = login_service.
 		NewRegisterService(username, password).Do()
 	if err != nil {

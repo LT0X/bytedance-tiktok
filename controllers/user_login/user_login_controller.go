@@ -29,9 +29,10 @@ func UserLoginHandler(c *gin.Context) {
 		})
 		return
 	}
-	//返回对应的错误
+	//进行业务逻辑
 	response.LoginResponse, err = login_service.
 		NewUserLoginService(username, password).Do()
+	//返回对应的错误
 	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			ResponseStatus: models.ResponseStatus{
@@ -44,4 +45,5 @@ func UserLoginHandler(c *gin.Context) {
 
 	response.ResponseStatus.StatusCode = 0
 	c.JSON(http.StatusOK, response)
+	return
 }

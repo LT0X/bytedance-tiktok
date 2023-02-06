@@ -11,9 +11,15 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go v1.44.194 // indirect
+	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.26.0 // indirect
+	github.com/u2takey/ffmpeg-go v0.4.1 // indirect
+	github.com/u2takey/go-utils v0.3.1 // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 )
 
 require (
@@ -32,7 +38,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect

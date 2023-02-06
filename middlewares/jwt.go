@@ -84,7 +84,7 @@ func JWTMiddleWare() gin.HandlerFunc {
 		//token超时
 		if time.Now().Unix() > tokenStruck.ExpiresAt {
 			c.JSON(http.StatusOK, models.ResponseStatus{
-				StatusCode: 402,
+				StatusCode: 403,
 				StatusMsg:  "token过期",
 			})
 			c.Abort() //阻止执行
