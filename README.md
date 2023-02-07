@@ -1,6 +1,8 @@
 # bytedance-tiktok
 青训营抖音项目
 
+//注意修改了一下middlerwares的一些bug。
+
 更新：增加了cache包，把redis初始化移入cache
      增加 static包，修改了一些东西,
      规范了一下命名规划，
