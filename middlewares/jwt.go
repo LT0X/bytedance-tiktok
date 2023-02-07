@@ -11,6 +11,7 @@ import (
 type MyClaims struct {
 	//除了满足下面的Claims，还需要以下用户信息
 	Uid int64
+
 	//jwt中标准的Claims
 	jwt.StandardClaims
 }
@@ -22,7 +23,7 @@ var key = []byte("dingxiangzhandui")
 func GetToken(loginUser models.UserLogin) (string, error) {
 
 	c := &MyClaims{
-		Uid: loginUser.Id, //自定义字段
+		Uid: loginUser.UserInfoId, //自定义字段
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),                          //发布时间
 			ExpiresAt: time.Now().Add(time.Hour * 10 * 24).Unix(), //过期时间
