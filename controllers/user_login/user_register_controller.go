@@ -29,7 +29,7 @@ func UserRegisterHandler(c *gin.Context) {
 		})
 		return
 	}
-	//进行业务逻辑
+	//进行业务逻辑，进行用户注册
 	response.RegisterResponse, err = login_service.
 		NewRegisterService(username, password).Do()
 	if err != nil {
@@ -41,6 +41,7 @@ func UserRegisterHandler(c *gin.Context) {
 		})
 		return
 	}
+	//返回响应参数
 	response.StatusCode = 0
 	c.JSON(http.StatusOK, response)
 }

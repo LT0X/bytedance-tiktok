@@ -6,14 +6,15 @@ import (
 )
 
 type Video struct {
-	Id            int64
+	Id            int64 `json:"id"`
 	UserInfoId    int64
-	PlayUrl       string
-	CoverUrl      string
-	FavoriteCount int64
+	Author        *UserInfo `json:"author" gorm:"-"`
+	PlayUrl       string    `json:"play_url"`
+	CoverUrl      string    `json:"cover_url"`
+	FavoriteCount int64     `json:"favorite_count"`
 	CommentCount  int64
-	IsFavorite    bool `json:"is_follow" gorm:"-"`
-	Title         string
+	IsFavorite    bool   `json:"is_follow" gorm:"-"`
+	Title         string `json:"title"`
 	UploadTime    time.Time
 }
 
@@ -50,4 +51,13 @@ func (*VideoDao) QueryUserVideoCount(uid int64) (int64, error) {
 func (*VideoDao) AddVideo(video *Video) error {
 	DB := dbutil.GetDB()
 	return DB.Table("videos").Create(video).Error
+}
+
+// QueryUserVideoById 查询用户视频
+func (*VideoDao) QueryUserVideoById(uid int64) (*[]Video, error) {
+	DB := dbutil.GetDB()
+	var videoList []Video
+	return &videoList, DB.Table("videos").Order("upload_time Desc").
+		Limit(MaxVideoNum).Where("user_info_id = ?", uid).
+		Find(&videoList).Error
 }

@@ -91,5 +91,4 @@ func (u UserFeedHandler) SendResponse() {
 	} else {
 		u.JSON(http.StatusOK, u.UserFeedResponse)
 	}
-
 }

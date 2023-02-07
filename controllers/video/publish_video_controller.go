@@ -27,7 +27,7 @@ func PublishVideoController(c *gin.Context) {
 		return
 	}
 	//执行业务逻辑
-	response, err := video_service.GetPublishVideoService(data, title, uid, c).Do()
+	response, err := video_service.NewPublishVideoService(data, title, uid, c).Do()
 	if err != nil {
 		sendResponse(c, -1, err.Error())
 		return

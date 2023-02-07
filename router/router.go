@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"qingxunyin/bytedance-tiktok/config"
+	"qingxunyin/bytedance-tiktok/controllers/user_info"
 	"qingxunyin/bytedance-tiktok/controllers/user_login"
 	"qingxunyin/bytedance-tiktok/controllers/video"
 	"qingxunyin/bytedance-tiktok/middlewares"
@@ -17,11 +18,11 @@ func InitRouter(r *gin.Engine) {
 
 	// 基础接口
 	apiRouter.GET("/feed/", video.UserFeedController)
-	apiRouter.GET("/user/")
+	apiRouter.GET("/user/", middlewares.JWTMiddleWare(), user_info.UserInfoController)
 	apiRouter.POST("/user/register/", middlewares.EncryptMiddleWare(), user_login.UserRegisterHandler)
 	apiRouter.POST("/user/login/", middlewares.EncryptMiddleWare(), user_login.UserLoginHandler)
 	apiRouter.POST("/publish/action/", middlewares.JWTMiddleWare(), video.PublishVideoController)
-	apiRouter.GET("/publish/list/")
+	apiRouter.GET("/publish/list/", middlewares.JWTMiddleWare(), user_info.PublishListController)
 
 	// 互动接口
 	apiRouter.POST("/favorite/action/")

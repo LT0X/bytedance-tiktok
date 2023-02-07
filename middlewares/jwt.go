@@ -22,7 +22,7 @@ var key = []byte("dingxiangzhandui")
 func GetToken(loginUser models.UserLogin) (string, error) {
 
 	c := &MyClaims{
-		Uid: loginUser.Id, //自定义字段
+		Uid: loginUser.UserInfoId, //自定义字段
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),                          //发布时间
 			ExpiresAt: time.Now().Add(time.Hour * 10 * 24).Unix(), //过期时间

@@ -31,7 +31,7 @@ type PublishVideoService struct {
 	c     *gin.Context
 }
 
-func GetPublishVideoService(file *multipart.FileHeader, title string, uid int64, c *gin.Context) *PublishVideoService {
+func NewPublishVideoService(file *multipart.FileHeader, title string, uid int64, c *gin.Context) *PublishVideoService {
 	return &PublishVideoService{
 		File:  file,
 		Title: title,
@@ -72,8 +72,8 @@ func (p *PublishVideoService) Do() (*models.ResponseStatus, error) {
 		return nil, err
 	}
 	//获取视频url和封面url
-	video.CoverUrl = videoUtil.GetVideoUrl(videoName)
-	video.PlayUrl = videoUtil.GetPictureUrl(fileName + ".png")
+	video.CoverUrl = videoUtil.GetPictureUrl(fileName + ".png")
+	video.PlayUrl = videoUtil.GetVideoUrl(videoName)
 
 	//更新数据库数据
 	video.Title = p.Title

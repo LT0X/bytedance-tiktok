@@ -7,8 +7,8 @@ import (
 )
 
 type RegisterResponse struct {
-	UserId int64
-	Token  string
+	UserId int64  `json:"user_id"`
+	Token  string `json:"token"`
 }
 
 type UserRegisterService struct {
@@ -50,7 +50,7 @@ func (u *UserRegisterService) Do() (*RegisterResponse, error) {
 	//颁发token和设置信息
 	u.RegisterResponse = new(RegisterResponse)
 	u.Token, err = middlewares.GetToken(userLogin)
-	u.UserId = userLogin.Id
+	u.UserId = userLogin.UserInfoId
 	if err != nil {
 		return nil, err
 	}

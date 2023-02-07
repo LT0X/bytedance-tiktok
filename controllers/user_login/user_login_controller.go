@@ -29,7 +29,7 @@ func UserLoginHandler(c *gin.Context) {
 		})
 		return
 	}
-	//进行业务逻辑
+	//进行业务逻辑,进行登录验证
 	response.LoginResponse, err = login_service.
 		NewUserLoginService(username, password).Do()
 	//返回对应的错误
@@ -42,7 +42,7 @@ func UserLoginHandler(c *gin.Context) {
 		})
 		return
 	}
-
+	//返回响应参数
 	response.ResponseStatus.StatusCode = 0
 	c.JSON(http.StatusOK, response)
 	return

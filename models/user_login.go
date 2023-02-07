@@ -2,7 +2,9 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"qingxunyin/bytedance-tiktok/config"
 	"qingxunyin/bytedance-tiktok/util/dbutil"
 )
 
@@ -42,7 +44,10 @@ func (*UserLoginDao) AddRegisterUser(userLogin *UserLogin) error {
 	tx.Begin()
 	userInfo := UserInfo{
 		Name: userLogin.Username,
+		Avatar: fmt.Sprintf("http://%s:%d/static/avatar/%s",
+			config.GetConf().Server.IP, config.GetConf().Server.Port, "user.png"),
 	}
+
 	err := GetUserInfoDao().AddUserInfoDao(&userInfo)
 	//发生错误，回滚事务
 	if err != nil {

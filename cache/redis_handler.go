@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis"
 	config2 "qingxunyin/bytedance-tiktok/config"
+	"qingxunyin/bytedance-tiktok/models"
 )
 
 // redis操作连接
@@ -24,4 +25,12 @@ func init() {
 	if err != nil {
 		fmt.Println("redis连接失败", err)
 	}
+}
+
+func GetIsFavorite(video models.Video) {
+
+}
+
+func GetIsFollow() {
+
 }

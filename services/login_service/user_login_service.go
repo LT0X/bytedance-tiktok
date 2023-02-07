@@ -41,7 +41,7 @@ func (u *UserLoginService) Do() (*LoginResponse, error) {
 	//颁发token和设置信息
 	u.LoginResponse = new(LoginResponse)
 	u.Token, err = middlewares.GetToken(*userLogin)
-	u.UserId = userLogin.Id
+	u.UserId = userLogin.UserInfoId
 	if err != nil {
 		return nil, err
 	}
