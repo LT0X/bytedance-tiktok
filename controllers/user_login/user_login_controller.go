@@ -43,7 +43,8 @@ func UserLoginHandler(c *gin.Context) {
 		return
 	}
 	//返回响应参数
-	response.ResponseStatus.StatusCode = 0
+	response.StatusCode = 0
+	response.StatusMsg = "success"
 	c.JSON(http.StatusOK, response)
 	return
 }

@@ -34,6 +34,7 @@ func PublishListController(c *gin.Context) {
 		return
 	}
 	response.StatusCode = 0
+	response.StatusMsg = "success"
 	sendResponse(c, response)
 
 }

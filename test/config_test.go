@@ -1,6 +1,7 @@
 package test
 
 import (
+	"fmt"
 	"qingxunyin/bytedance-tiktok/models"
 	"testing"
 )
@@ -14,7 +15,8 @@ func TestAdd(t *testing.T) {
 		Password:   "sdsd",
 	}
 
-	models.GetUserLoginDao().AddUserLogin(&xx)
+	xxx := models.GetUserLoginDao()
+	fmt.Print(xxx, xx)
 }
 
 func Pxx() {

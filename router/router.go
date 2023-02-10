@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"qingxunyin/bytedance-tiktok/config"
+	"qingxunyin/bytedance-tiktok/controllers/message"
 	"qingxunyin/bytedance-tiktok/controllers/user_info"
 	"qingxunyin/bytedance-tiktok/controllers/user_login"
 	"qingxunyin/bytedance-tiktok/controllers/video"
@@ -20,7 +21,7 @@ func InitRouter(r *gin.Engine) {
 	apiRouter.GET("/feed/", video.UserFeedController)
 	apiRouter.GET("/user/", middlewares.JWTMiddleWare(), user_info.UserInfoController)
 	apiRouter.POST("/user/register/", middlewares.EncryptMiddleWare(), user_login.UserRegisterHandler)
-	apiRouter.POST("/user/login/", middlewares.EncryptMiddleWare(), user_login.UserLoginHandler)
+	apiRouter.POST("/user/login/", middlewares.LoginMiddleWare(), user_login.UserLoginHandler)
 	apiRouter.POST("/publish/action/", middlewares.JWTMiddleWare(), video.PublishVideoController)
 	apiRouter.GET("/publish/list/", middlewares.JWTMiddleWare(), user_info.PublishListController)
 
@@ -34,8 +35,8 @@ func InitRouter(r *gin.Engine) {
 	apiRouter.POST("/relation/action/")
 	apiRouter.GET("/relation/follow/list/")
 	apiRouter.GET("/relation/follower/list/")
-	apiRouter.GET("/relation/friend/list/")
-	apiRouter.GET("/message/chat/")
-	apiRouter.POST("/message/action/")
+	apiRouter.GET("/relation/friend/list/", message.FriendList)
+	apiRouter.GET("/message/chat/", middlewares.JWTMiddleWare(), message.UserMessageController)
+	apiRouter.POST("/message/action/", middlewares.JWTMiddleWare(), message.ActionMessageController)
 
 }

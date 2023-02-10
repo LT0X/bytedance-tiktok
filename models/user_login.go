@@ -20,12 +20,12 @@ type UserLoginDao struct {
 }
 
 var (
-	userLoginDao *UserLoginDao
+	userLoginDao UserLoginDao
 )
 
 // GetUserLoginDao 单例返回对象
 func GetUserLoginDao() *UserLoginDao {
-	return userLoginDao
+	return &userLoginDao
 }
 
 // AddUserLogin 更新user_login表
@@ -84,7 +84,7 @@ func (*UserLoginDao) QueryUserLogin(username string, password string) (*UserLogi
 		Where("username = ?", username).
 		First(&userLogin)
 	judge := equalsPassword(password, userLogin.Password)
-	if userLogin.Id == 0 || judge {
+	if userLogin.Id == 0 || !judge {
 		return nil, errors.New("用户或密码不正确")
 	}
 	return &userLogin, nil

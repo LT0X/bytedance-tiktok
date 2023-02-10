@@ -40,7 +40,7 @@ func UserInfoController(c *gin.Context) {
 	}
 	handler.InfoResponse = res
 	// 开始返回响应数据
-	handler.sendResponse(0, "")
+	handler.sendResponse(0, "success")
 	return
 }
 

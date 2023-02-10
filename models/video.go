@@ -12,27 +12,27 @@ type Video struct {
 	PlayUrl       string    `json:"play_url"`
 	CoverUrl      string    `json:"cover_url"`
 	FavoriteCount int64     `json:"favorite_count"`
-	CommentCount  int64
-	IsFavorite    bool   `json:"is_follow" gorm:"-"`
-	Title         string `json:"title"`
+	CommentCount  int64     `json:"comment_count"`
+	IsFavorite    bool      `json:"is_follow" gorm:"-"`
+	Title         string    `json:"title"`
 	UploadTime    time.Time
 }
 
 type VideoDao struct {
 }
 
-var videoDao *VideoDao
+var videoDao VideoDao
 
 const MaxVideoNum = 30
 
 func GetVideoDao() *VideoDao {
-	return videoDao
+	return &videoDao
 }
 
 // GetVideoList 按投稿时间倒序返回限制数量的视频
 func (*VideoDao) GetVideoList(lastTime time.Time) (*[]Video, error) {
 	DB := dbutil.GetDB()
-	var videoList []Video
+	videoList := make([]Video, MaxVideoNum)
 	return &videoList, DB.Table("videos").Order("upload_time Desc").
 		Limit(MaxVideoNum).Where("upload_time < ?", lastTime).
 		Find(&videoList).Error

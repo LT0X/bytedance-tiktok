@@ -59,6 +59,35 @@ func EncryptMiddleWare() gin.HandlerFunc {
 	}
 }
 
+func LoginMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		password := c.Query("password")
+		if password == "" {
+			password = c.PostForm("password")
+		}
+		//对密码的规范进行检测，
+		if len(password) > 20 {
+			c.JSON(http.StatusOK, models.ResponseStatus{
+				StatusCode: 1,
+				StatusMsg:  "密码长度过长",
+			})
+			c.Abort()
+			return
+		}
+		if IsChinese(password) {
+			c.JSON(http.StatusOK, models.ResponseStatus{
+				StatusCode: -1,
+				StatusMsg:  "密码包含中文",
+			})
+			c.Abort()
+			return
+		}
+
+		c.Set("password", password)
+		c.Next()
+	}
+}
+
 func IsChinese(str string) bool {
 	var count int
 	for _, v := range str {

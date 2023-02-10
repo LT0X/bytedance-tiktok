@@ -43,5 +43,6 @@ func UserRegisterHandler(c *gin.Context) {
 	}
 	//返回响应参数
 	response.StatusCode = 0
+	response.StatusMsg = "success"
 	c.JSON(http.StatusOK, response)
 }

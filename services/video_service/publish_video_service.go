@@ -42,7 +42,7 @@ func NewPublishVideoService(file *multipart.FileHeader, title string, uid int64,
 }
 
 func (p *PublishVideoService) Do() (*models.ResponseStatus, error) {
-	Response := VideoResponse{
+	response := VideoResponse{
 		ResponseStatus: &models.ResponseStatus{},
 	}
 	//检查文件格式
@@ -85,8 +85,9 @@ func (p *PublishVideoService) Do() (*models.ResponseStatus, error) {
 		return nil, err
 	}
 
-	Response.StatusCode = 0
-	return Response.ResponseStatus, nil
+	response.StatusCode = 0
+	response.StatusMsg = "success"
+	return response.ResponseStatus, nil
 }
 
 func (p *PublishVideoService) GetVideoName() (string, error) {
@@ -99,4 +100,5 @@ func (p *PublishVideoService) GetVideoName() (string, error) {
 	}
 	filename = fmt.Sprintf("%d-%d", p.Uid, count)
 	return filename, nil
+
 }

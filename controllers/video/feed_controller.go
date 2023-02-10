@@ -61,6 +61,7 @@ func UserFeedController(c *gin.Context) {
 		}
 		//发送响应信息
 		handler.StatusCode = 0
+		handler.StatusMsg = "success"
 		handler.SendResponse()
 	}
 }

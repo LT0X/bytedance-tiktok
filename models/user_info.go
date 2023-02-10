@@ -14,11 +14,11 @@ type UserInfo struct {
 type UserInfoDao struct {
 }
 
-var userInfoDao *UserInfoDao
+var userInfoDao UserInfoDao
 
 // GetUserInfoDao 单例返回Dao对象
 func GetUserInfoDao() *UserInfoDao {
-	return userInfoDao
+	return &userInfoDao
 }
 
 func (*UserInfoDao) AddUserInfoDao(userInfo *UserInfo) error {

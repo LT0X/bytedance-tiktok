@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// GetVideoPicture 调用ffmoeg为视频截取封面
+// GetVideoPicture 调用ffmpeg为视频截取封面
 func GetVideoPicture(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {
 
 	buf := bytes.NewBuffer(nil)
