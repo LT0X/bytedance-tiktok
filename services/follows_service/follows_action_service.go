@@ -2,6 +2,7 @@ package follows_service
 
 import (
 	"errors"
+	"qingxunyin/bytedance-tiktok/cache"
 	"qingxunyin/bytedance-tiktok/models"
 )
 
@@ -27,16 +28,17 @@ func (followsService *FollowsService) Do() error {
 	if relations == 1 && followsService.ActionType == 1 {
 		followsOnce.UpdateFollows(followsService.UserId, followsService.ToUserId)
 		//更新redis
+		cache.NewFollowsRedis().UpdateFollowsAction(followsService.UserId, followsService.ToUserId, 1)
 	}
 	//当查询到有记录，且要进行取关时
 	if relations == 1 && followsService.ActionType == 2 {
 		followsOnce.CancelFollows(followsService.UserId, followsService.ToUserId)
 		//更新redis
+		cache.NewFollowsRedis().UpdateFollowsAction(followsService.UserId, followsService.ToUserId, 2)
 	}
 	//当没有记录时，插入一条新数据
 	if relations == 0 {
 		followsOnce.InsertNewFollows(followsService.UserId, followsService.ToUserId)
-		//更新redis
 	}
 
 	return nil
