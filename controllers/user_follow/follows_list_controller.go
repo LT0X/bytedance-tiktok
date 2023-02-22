@@ -9,9 +9,9 @@ import (
 )
 
 type FollowsListResp struct {
-	StatusCode int64
-	StatusMsg  string
-	List       *[]models.UserInfo
+	StatusCode int64              `json:"status_code"`
+	StatusMsg  string             `json:"status_msg"`
+	List       *[]models.UserInfo `json:"user_list"`
 }
 
 func GetFollowsList(c *gin.Context) {

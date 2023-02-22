@@ -8,8 +8,8 @@ import (
 )
 
 type ActionResp struct {
-	StatusCode int64
-	StatusMsg  string
+	StatusCode int64  `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
 }
 
 func FollowsAction(c *gin.Context) {
@@ -30,12 +30,12 @@ func FollowsAction(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, ActionResp{
 			StatusCode: -1,
-			StatusMsg:  "解析错误",
+			StatusMsg:  "处理错误",
 		})
 	}
 
 	c.JSON(http.StatusOK, ActionResp{
-		StatusCode: 1,
-		StatusMsg:  "success",
+		StatusCode: 0,
+		StatusMsg:  "操作成功",
 	})
 }
