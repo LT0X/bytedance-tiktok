@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"qingxunyin/bytedance-tiktok/util/dbutil"
 	"strings"
 	"sync"
@@ -22,44 +21,46 @@ var (
 	userfollowsOnce sync.Once //用来限定userfollowsDao为单例
 )
 
-func NewOnce() *UserFollowsDao {
+func NewFollowsOnce() *UserFollowsDao {
 	userfollowsOnce.Do(func() {
 		userfollowsDao = &UserFollowsDao{} //生成单例对象
 	})
 	return userfollowsDao
 }
 
-// InsertFollows 关注操作
-func (*UserFollowsDao) InsertFollows(userId int64, toUserId int64) (int8, error) {
-	follows := UserFollows{}
-	//先查询表里是否有关注的记录
-	db := dbutil.GetDB()
-	number := db.Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Take(&follows).RowsAffected
-	if number == 0 {
-		//查询到0条结果，则新增一条关注数据
-		newFollows := UserFollows{UserId: userId, ToUserId: toUserId, ActionType: 1}
-		db.Create(newFollows)
-		return 0, nil
-	}
-	//查询到有记录数据，则将数据的ActionType改为1，即关注
-	db.Model(&follows).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 1)
-	return 0, nil
-}
-
-// CancelFollows 取消关注
-func (*UserFollowsDao) CancelFollows(userId int64, toUserId int64) (int8, error) {
+// FindRelations 查询用户之间是否有关注记录
+func (*UserFollowsDao) FindRelations(userId int64, toUserId int64) (int8, error) {
 	follows := UserFollows{}
 	//先查询表里是否有关注的记录
 	db := dbutil.GetDB()
 	err := db.Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Take(&follows).Error
 	if err != nil && strings.EqualFold(err.Error(), "record not found") {
-		//没有查询到时打印record not found
-		fmt.Println("error:", err)
 		return 0, err
 	}
-	//查询到有记录数据，则将数据的ActionType改为2，即取消关注
-	db.Model(&follows).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 2)
-	return 0, nil
+	//查询到有记录，返回1,nil
+	return 1, nil
+}
+
+// InsertNewFollows 当没有关注记录时，可以插入一条新记录
+func (*UserFollowsDao) InsertNewFollows(userId int64, toUserId int64) bool {
+	db := dbutil.GetDB()
+	newFollows := UserFollows{UserId: userId, ToUserId: toUserId, ActionType: 1}
+	db.Create(newFollows)
+	return true
+}
+
+// UpdateFollows 更新关注操作
+func (*UserFollowsDao) UpdateFollows(userId int64, toUserId int64) bool {
+	db := dbutil.GetDB()
+	db.Model(&UserFollows{}).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 1)
+	return true
+}
+
+// CancelFollows 取消关注
+func (*UserFollowsDao) CancelFollows(userId int64, toUserId int64) bool {
+	db := dbutil.GetDB()
+	db.Model(&UserFollows{}).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 2)
+	return true
 }
 
 // GetFans 获取粉丝列表
