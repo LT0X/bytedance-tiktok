@@ -46,6 +46,14 @@ func (*UserFollowsDao) InsertNewFollows(userId int64, toUserId int64) bool {
 	db := dbutil.GetDB()
 	newFollows := UserFollows{UserId: userId, ToUserId: toUserId, ActionType: 1}
 	db.Create(newFollows)
+	var num int64
+	var num1 int64
+	db.Model(&UserInfo{}).Select("follow_count").Where("user_Id=?", userId).Find(&num)
+	num = num + 1
+	db.Model(&UserInfo{}).Select("follower_count").Where("user_Id=?", toUserId).Find(&num1)
+	num1 = num1 + 1
+	db.Model(&UserInfo{}).Where("user_Id=?", userId).Update("follow_count", num)
+	db.Model(&UserInfo{}).Where("user_Id=?", toUserId).Update("follower_count", num1)
 	return true
 }
 
@@ -53,6 +61,14 @@ func (*UserFollowsDao) InsertNewFollows(userId int64, toUserId int64) bool {
 func (*UserFollowsDao) UpdateFollows(userId int64, toUserId int64) bool {
 	db := dbutil.GetDB()
 	db.Model(&UserFollows{}).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 1)
+	var num int64
+	var num1 int64
+	db.Model(&UserInfo{}).Select("follow_count").Where("user_Id=?", userId).Find(&num)
+	num = num + 1
+	db.Model(&UserInfo{}).Select("follower_count").Where("user_Id=?", toUserId).Find(&num1)
+	num1 = num1 + 1
+	db.Model(&UserInfo{}).Where("user_Id=?", userId).Update("follow_count", num)
+	db.Model(&UserInfo{}).Where("user_Id=?", toUserId).Update("follower_count", num1)
 	return true
 }
 
@@ -60,6 +76,14 @@ func (*UserFollowsDao) UpdateFollows(userId int64, toUserId int64) bool {
 func (*UserFollowsDao) CancelFollows(userId int64, toUserId int64) bool {
 	db := dbutil.GetDB()
 	db.Model(&UserFollows{}).Where("user_Id=?", userId).Where("to_user_id=?", toUserId).Update("action_type", 2)
+	var num int64
+	var num1 int64
+	db.Model(&UserInfo{}).Select("follow_count").Where("user_Id=?", userId).Find(&num)
+	num = num - 1
+	db.Model(&UserInfo{}).Select("follower_count").Where("user_Id=?", toUserId).Find(&num1)
+	num1 = num1 - 1
+	db.Model(&UserInfo{}).Where("user_Id=?", userId).Update("follow_count", num)
+	db.Model(&UserInfo{}).Where("user_Id=?", toUserId).Update("follower_count", num1)
 	return true
 }
 
