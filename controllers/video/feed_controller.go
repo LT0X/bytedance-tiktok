@@ -46,6 +46,7 @@ func UserFeedController(c *gin.Context) {
 		}
 		handler.FeedResponse, err = video_service.
 			NewFeedService(handler.Uid, handler.LatestTime).Do()
+
 		if err != nil {
 			handler.SendResponse()
 			return

@@ -9,16 +9,10 @@ import (
 	"os"
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestAdds(t *testing.T) {
-	xx := time.Now()
-	fmt.Print(xx)
-	_, err := GetSnapshot("D:\\GoProject\\src\\qingxunyin\\bytedance-tiktok\\static\\video\\bear.mp4", "D:\\GoProject\\src\\qingxunyin\\bytedance-tiktok\\static\\picture\\xx", 1)
-	if err != nil {
-		return
-	}
+
 }
 
 func GetSnapshot(videoPath, snapshotPath string, frameNum int) (snapshotName string, err error) {

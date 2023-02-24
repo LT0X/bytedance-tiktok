@@ -14,7 +14,8 @@ type UserInfoResponse struct {
 }
 
 type UserInfoHandler struct {
-	Uid int64
+	Uid      int64
+	ToUserId int64
 	UserInfoResponse
 	*gin.Context
 }
@@ -25,26 +26,34 @@ func UserInfoController(c *gin.Context) {
 		Context: c,
 	}
 	//解析参数
-	uid := c.Query("user_id")
-	id, err := strconv.ParseInt(uid, 10, 64)
+	id := c.Query("user_id")
+	toUserId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		handler.sendResponse(-1, "uid解析错误")
+		handler.SendResponse(-1, "uid解析错误")
 		return
 	}
-	handler.Uid = id
+
+	temp, _ := c.Get("user_id")
+	uid, ok := temp.(int64)
+	if !ok {
+		handler.SendResponse(-1, "解析错误")
+		return
+	}
+	handler.ToUserId = toUserId
+	handler.Uid = uid
 	//开始业务逻辑，查找对应的UserInfo
-	res, err := info_service.NewUserInfoService(handler.Uid).Do()
+	res, err := info_service.NewUserInfoService(handler.Uid, handler.ToUserId).Do()
 	if err != nil {
-		handler.sendResponse(-1, err.Error())
+		handler.SendResponse(-1, err.Error())
 		return
 	}
 	handler.InfoResponse = res
 	// 开始返回响应数据
-	handler.sendResponse(0, "success")
+	handler.SendResponse(0, "success")
 	return
 }
 
-func (u UserInfoHandler) sendResponse(code int32, msg string) {
+func (u UserInfoHandler) SendResponse(code int32, msg string) {
 	if u.InfoResponse == nil {
 		u.JSON(http.StatusOK, models.ResponseStatus{
 			StatusCode: code,

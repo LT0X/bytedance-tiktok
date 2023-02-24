@@ -33,6 +33,9 @@ func (f *FeedService) Do() (*FeedResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(*list) == 0 {
+		list, err = models.GetVideoDao().GetVideoFirstList()
+	}
 	response.VideoList = list
 
 	for index, _ := range *list {
@@ -44,7 +47,7 @@ func (f *FeedService) Do() (*FeedResponse, error) {
 		(*list)[index].Author = user
 		//如果是用户登录,需要检查视频和用户是否关注已经点赞
 		if f.Uid > 0 {
-			cache.GetIsFavorite((*list)[index])
+			(*list)[index].IsFavorite, _ = cache.GetIsFavorite((*list)[index].Id, f.Uid)
 		}
 	}
 

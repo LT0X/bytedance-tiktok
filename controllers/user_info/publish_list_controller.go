@@ -22,7 +22,7 @@ func PublishListController(c *gin.Context) {
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = "解析uid错误"
-		sendResponse(c, response)
+		SendResponse(c, response)
 		return
 	}
 	//进行业务逻辑的处理，进行查询用户视频
@@ -30,16 +30,18 @@ func PublishListController(c *gin.Context) {
 	if err != nil {
 		response.StatusCode = -1
 		response.StatusMsg = err.Error()
-		sendResponse(c, response)
+		SendResponse(c, response)
 		return
 	}
+
+	//发送响应信息
 	response.StatusCode = 0
 	response.StatusMsg = "success"
-	sendResponse(c, response)
+	SendResponse(c, response)
 
 }
 
-func sendResponse(c *gin.Context, response *PublishListResponse) {
+func SendResponse(c *gin.Context, response *PublishListResponse) {
 	if response.ListResponse == nil {
 		c.JSON(http.StatusOK, response.ResponseStatus)
 	} else {

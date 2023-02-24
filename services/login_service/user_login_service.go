@@ -35,7 +35,7 @@ func (u *UserLoginService) Do() (*LoginResponse, error) {
 	//检查用户是否存在
 	userLogin, err := models.GetUserLoginDao().QueryUserLogin(u.username, u.password)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("用户不存在")
 	}
 
 	//颁发token和设置信息

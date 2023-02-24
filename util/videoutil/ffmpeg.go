@@ -1,4 +1,4 @@
-package videoUtil
+package videoutil
 
 import (
 	"bytes"

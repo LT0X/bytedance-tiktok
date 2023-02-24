@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"qingxunyin/bytedance-tiktok/config"
 	"qingxunyin/bytedance-tiktok/models"
-	"qingxunyin/bytedance-tiktok/util/videoUtil"
+	"qingxunyin/bytedance-tiktok/util/videoutil"
 	"time"
 )
 
@@ -67,13 +67,13 @@ func (p *PublishVideoService) Do() (*models.ResponseStatus, error) {
 	}
 	//获取视频第一帧为视频封面并保存
 
-	_, err = videoUtil.GetVideoPicture(videoPath, staticPath+"/picture/"+fileName, 1)
+	_, err = videoutil.GetVideoPicture(videoPath, staticPath+"/picture/"+fileName, 1)
 	if err != nil {
 		return nil, err
 	}
 	//获取视频url和封面url
-	video.CoverUrl = videoUtil.GetPictureUrl(fileName + ".png")
-	video.PlayUrl = videoUtil.GetVideoUrl(videoName)
+	video.CoverUrl = videoutil.GetPictureUrl(fileName + ".png")
+	video.PlayUrl = videoutil.GetVideoUrl(videoName)
 
 	//更新数据库数据
 	video.Title = p.Title

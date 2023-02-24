@@ -38,24 +38,27 @@ func (*UserLoginDao) AddUserLogin(userLogin *UserLogin) error {
 }
 
 // AddRegisterUser 添加注册用户
-func (*UserLoginDao) AddRegisterUser(userLogin *UserLogin) error {
+func (u *UserLoginDao) AddRegisterUser(userLogin *UserLogin) error {
 	//开启事务进行多表插入
-	tx := dbutil.GetDB().Begin()
+	tx := dbutil.GetDB()
 	tx.Begin()
 	userInfo := UserInfo{
 		Name: userLogin.Username,
 		Avatar: fmt.Sprintf("http://%s:%d/static/avatar/%s",
 			config.GetConf().Server.IP, config.GetConf().Server.Port, "user.png"),
+		BackgroundImage: fmt.Sprintf("http://%s:%d/static/background/%s",
+			config.GetConf().Server.IP, config.GetConf().Server.Port, "user.png"),
+		Signature: "hello world",
 	}
 
-	err := GetUserInfoDao().AddUserInfoDao(&userInfo)
+	err := tx.Table("user_infos").Create(&userInfo).Error
 	//发生错误，回滚事务
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 	userLogin.UserInfoId = userInfo.Id
-	err = GetUserLoginDao().AddUserLogin(userLogin)
+	err = tx.Table("user_logins").Create(userLogin).Error
 	//发生错误，回滚事务
 	if err != nil {
 		tx.Rollback()
@@ -63,6 +66,7 @@ func (*UserLoginDao) AddRegisterUser(userLogin *UserLogin) error {
 	}
 	tx.Commit()
 	return nil
+
 }
 
 func (*UserLoginDao) IsUsernameExist(username string) bool {

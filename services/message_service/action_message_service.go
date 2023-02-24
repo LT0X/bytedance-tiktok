@@ -1,6 +1,8 @@
 package message_service
 
 import (
+	"fmt"
+	"qingxunyin/bytedance-tiktok/cache"
 	"qingxunyin/bytedance-tiktok/models"
 	"time"
 )
@@ -29,6 +31,9 @@ func (a *ActionMessageService) Do() error {
 		CreateTime: time.Now(),
 	}
 	err := models.GetMessageDao().AddUserMessage(&msg)
+	key := fmt.Sprintf("%v:%v", a.FromUserId, a.ToUserId)
+	unix := msg.CreateTime.UnixNano() / 1e6
+	cache.SetUserPreMsgTime(key, fmt.Sprintf("%v", unix))
 	if err != nil {
 		return err
 	}

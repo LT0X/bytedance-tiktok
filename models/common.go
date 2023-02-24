@@ -9,6 +9,5 @@ type ResponseStatus struct {
 }
 
 var (
-	ErrNullPointer   = errors.New("空指针异常")
-	ErrEmptyUserList = errors.New("用户列表为空")
+	ErrNullPointer = errors.New("空指针异常")
 )

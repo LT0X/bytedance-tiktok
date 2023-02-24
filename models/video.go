@@ -13,7 +13,7 @@ type Video struct {
 	CoverUrl      string    `json:"cover_url"`
 	FavoriteCount int64     `json:"favorite_count"`
 	CommentCount  int64     `json:"comment_count"`
-	IsFavorite    bool      `json:"is_follow" gorm:"-"`
+	IsFavorite    bool      `json:"is_favorite" gorm:"-"`
 	Title         string    `json:"title"`
 	UploadTime    time.Time
 }
@@ -38,6 +38,13 @@ func (*VideoDao) GetVideoList(lastTime time.Time) (*[]Video, error) {
 		Find(&videoList).Error
 }
 
+func (*VideoDao) GetVideoFirstList() (*[]Video, error) {
+	DB := dbutil.GetDB()
+	videoList := make([]Video, MaxVideoNum)
+	return &videoList, DB.Table("videos").Order("upload_time Desc").
+		Limit(MaxVideoNum).Find(&videoList).Error
+}
+
 // QueryUserVideoCount 查询用户的视频数量
 func (*VideoDao) QueryUserVideoCount(uid int64) (int64, error) {
 	DB := dbutil.GetDB()
@@ -49,8 +56,23 @@ func (*VideoDao) QueryUserVideoCount(uid int64) (int64, error) {
 
 // AddVideo 更新视频数据库
 func (*VideoDao) AddVideo(video *Video) error {
-	DB := dbutil.GetDB()
-	return DB.Table("videos").Create(video).Error
+
+	//开启事务
+	tx := dbutil.GetDB()
+	tx.Begin()
+	err := tx.Table("videos").Create(video).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = tx.Table("user_infos").
+		Exec("update user_infos set work_count = work_count + 1 where id = ?", video.UserInfoId).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
 
 // QueryUserVideoById 查询用户视频
@@ -60,4 +82,27 @@ func (*VideoDao) QueryUserVideoById(uid int64) (*[]Video, error) {
 	return &videoList, DB.Table("videos").Order("upload_time Desc").
 		Limit(MaxVideoNum).Where("user_info_id = ?", uid).
 		Find(&videoList).Error
+}
+
+// QueryUserFavoriteVideo 查找用户喜欢的视频
+func (*VideoDao) QueryUserFavoriteVideo(uid int64) (*[]Video, error) {
+	DB := dbutil.GetDB()
+	var videoList []Video
+	return &videoList, DB.Table("videos,user_favor_videos ").
+		Where("user_favor_videos.video_id = videos.id and user_favor_videos.user_info_id = ?", uid).
+		Find(&videoList).Error
+}
+
+func (*VideoDao) QueryUserFavorite(list []string) (*[]Video, error) {
+	DB := dbutil.GetDB()
+	var videoList []Video
+	return &videoList, DB.Table("videos").
+		Where("id in ?", list).Find(&videoList).Error
+}
+
+func (*VideoDao) UpdateVideoLikeCount(count int64, vid int64) error {
+	DB := dbutil.GetDB()
+	return DB.
+		Exec("update videos set favorite_coutn = ? where vid = ?", count, vid).
+		Error
 }

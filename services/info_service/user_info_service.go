@@ -10,13 +10,15 @@ type InfoResponse struct {
 }
 
 type UserInfoService struct {
-	Uid int64
+	Uid      int64
+	ToUserId int64
 	*InfoResponse
 }
 
-func NewUserInfoService(uid int64) *UserInfoService {
+func NewUserInfoService(uid int64, toUserId int64) *UserInfoService {
 	return &UserInfoService{
 		Uid:          uid,
+		ToUserId:     toUserId,
 		InfoResponse: &InfoResponse{},
 	}
 }
@@ -29,7 +31,7 @@ func (u *UserInfoService) Do() (*InfoResponse, error) {
 	}
 	u.InfoResponse.UserInfo = info
 	//查询是否关注
-	cache.GetIsFollow()
+	u.UserInfo.IsFollow = cache.GetFollowsRedis().GetFollowsType(u.Uid, u.ToUserId)
 	//返回处理信息
 	return u.InfoResponse, nil
 }
